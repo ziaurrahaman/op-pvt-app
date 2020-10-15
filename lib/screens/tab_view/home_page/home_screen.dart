@@ -173,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   changeProfileByIncreasingTheIndex() {
     pageController.nextPage(
         duration: Duration(seconds: 1), curve: Curves.easeIn);
@@ -180,6 +181,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    users.forEach((element) {
+      print(element.toString());
+    });
+
     final deviceSize = MediaQuery.of(context).size;
     print('screenWidth: ${deviceSize.width}');
     final screenSize =
@@ -210,9 +215,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: StreamBuilder(
                       stream: Firestore.instance
                           .collection('users')
-
-                          // .where('favourites',
-                          //     arrayContains: currentUser.userId)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -230,6 +232,39 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (snapshot.hasError) {
                           return Center(child: Text(snapshot.error.toString()));
                         }
+
+                        users = new List<User>();
+
+                        for (int i = 0; i < snapshot.data.documents.length; i++) {
+                          var user = User(
+                            bio: snapshot.data.documents[i]['bio'],
+                            dob: snapshot.data.documents[i]['dob'],
+                            email: snapshot.data.documents[i]['email'],
+                            flag: snapshot.data.documents[i]['flag'],
+                            gender: snapshot.data.documents[i]['gender'],
+                            imageUrl: snapshot.data.documents[i]['profile_picture'],
+                            likes: snapshot.data.documents[i]['likes'],
+                            name: snapshot.data.documents[i]['name'],
+                            phoneNumber: snapshot.data.documents[i]['phoneNumber'],
+                            pinned: snapshot.data.documents[i]['pinned'],
+                            subscribers: snapshot.data.documents[i]['subscribers'],
+                            favourites: snapshot.data.documents[i]['favourites'],
+                            userId: snapshot.data.documents[i]['userId'],
+                            website: snapshot.data.documents[i]['website'],
+                            isFavourited: snapshot.data.documents[i]['favourites'].contains(currentUser.userId)
+                          );
+
+                          users.add(user);
+                        }
+
+                        users.sort((User a, User b) {
+                          if (b.isFavourited) {
+                            return 1;
+                          }
+                          return -1;
+                        });
+
+
                         return PageView.builder(
                           controller: pageController,
                           scrollDirection: Axis.horizontal,
@@ -252,34 +287,34 @@ class _HomeScreenState extends State<HomeScreen> {
                             // print(users.isEmpty);
                             // print(
                             //     'User after calling function ${users[index].name}');
-                            return _buildContent(
-                                // users[index]
-                                User(
-                                  bio: snapshot.data.documents[index]['bio'],
-                                  dob: snapshot.data.documents[index]['dob'],
-                                  email: snapshot.data.documents[index]
-                                      ['email'],
-                                  flag: snapshot.data.documents[index]['flag'],
-                                  gender: snapshot.data.documents[index]
-                                      ['gender'],
-                                  imageUrl: snapshot.data.documents[index]
-                                      ['profile_picture'],
-                                  likes: snapshot.data.documents[index]
-                                      ['likes'],
-                                  name: snapshot.data.documents[index]['name'],
-                                  phoneNumber: snapshot.data.documents[index]
-                                      ['phoneNumber'],
-                                  pinned: snapshot.data.documents[index]
-                                      ['pinned'],
-                                  subscribers: snapshot.data.documents[index]
-                                      ['subscribers'],
-                                  favourites: snapshot.data.documents[index]
-                                      ['favourites'],
-                                  userId: snapshot.data.documents[index]
-                                      ['userId'],
-                                  website: snapshot.data.documents[index]
-                                      ['website'],
-                                ),
+                            return users.length <= 0 ? Center(child: Text("No Users Created."),) : _buildContent(
+                               users[index],
+                                // User(
+                                //   bio: snapshot.data.documents[index]['bio'],
+                                //   dob: snapshot.data.documents[index]['dob'],
+                                //   email: snapshot.data.documents[index]
+                                //       ['email'],
+                                //   flag: snapshot.data.documents[index]['flag'],
+                                //   gender: snapshot.data.documents[index]
+                                //       ['gender'],
+                                //   imageUrl: snapshot.data.documents[index]
+                                //       ['profile_picture'],
+                                //   likes: snapshot.data.documents[index]
+                                //       ['likes'],
+                                //   name: snapshot.data.documents[index]['name'],
+                                //   phoneNumber: snapshot.data.documents[index]
+                                //       ['phoneNumber'],
+                                //   pinned: snapshot.data.documents[index]
+                                //       ['pinned'],
+                                //   subscribers: snapshot.data.documents[index]
+                                //       ['subscribers'],
+                                //   favourites: snapshot.data.documents[index]
+                                //       ['favourites'],
+                                //   userId: snapshot.data.documents[index]
+                                //       ['userId'],
+                                //   website: snapshot.data.documents[index]
+                                //       ['website'],
+                                // ),
                                 deviceSize,
                                 screenSize);
                           },

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-class User {
+class User extends Comparable {
   final String userId;
   final String name;
   final String email;
@@ -20,6 +20,7 @@ class User {
   final String favourited;
   final String flag;
   final String pinned;
+  final bool isFavourited;
   User({
     this.userId,
     this.name,
@@ -38,6 +39,7 @@ class User {
     this.favourited,
     this.flag,
     this.pinned,
+    this.isFavourited,
   });
 
   User copyWith({
@@ -78,6 +80,14 @@ class User {
       pinned: pinned ?? this.pinned,
     );
   }
+
+  // @override
+  // int compareTo(User other) {
+  //   if (other.isFavourited) {
+  //     return 1;
+  //   }
+  //   return -1;
+  // }
 
   Map<String, dynamic> toMap() {
     return {
@@ -132,5 +142,13 @@ class User {
   @override
   String toString() {
     return 'User(userId: $userId, name: $name, email: $email, imageUrl: $imageUrl, phoneNumber: $phoneNumber, gender: $gender, dob: $dob, website: $website, bio: $bio, likes: $likes, liked: $liked, subscribers: $subscribers, subscribed: $subscribed, favourites:$favourites, favourited: $favourited, flag: $flag, pinned: $pinned)';
+  }
+
+  @override
+  int compareTo(other) {
+    if (other.isFavourited) {
+      return 1;
+    }
+    return -1;
   }
 }
