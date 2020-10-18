@@ -20,7 +20,7 @@ class User extends Comparable {
   final String favourited;
   final String flag;
   final String pinned;
-  final bool isFavourited;
+  bool isFavourited;
   User({
     this.userId,
     this.name,

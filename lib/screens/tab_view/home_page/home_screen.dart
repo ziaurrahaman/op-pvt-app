@@ -236,23 +236,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         users = new List<User>();
 
                         for (int i = 0; i < snapshot.data.documents.length; i++) {
-                          var user = User(
-                            bio: snapshot.data.documents[i]['bio'],
-                            dob: snapshot.data.documents[i]['dob'],
-                            email: snapshot.data.documents[i]['email'],
-                            flag: snapshot.data.documents[i]['flag'],
-                            gender: snapshot.data.documents[i]['gender'],
-                            imageUrl: snapshot.data.documents[i]['profile_picture'],
-                            likes: snapshot.data.documents[i]['likes'],
-                            name: snapshot.data.documents[i]['name'],
-                            phoneNumber: snapshot.data.documents[i]['phoneNumber'],
-                            pinned: snapshot.data.documents[i]['pinned'],
-                            subscribers: snapshot.data.documents[i]['subscribers'],
-                            favourites: snapshot.data.documents[i]['favourites'],
-                            userId: snapshot.data.documents[i]['userId'],
-                            website: snapshot.data.documents[i]['website'],
-                            isFavourited: snapshot.data.documents[i]['favourites'].contains(currentUser.userId)
-                          );
+                            var user = User(
+                                bio: snapshot.data.documents[i]['bio'],
+                                dob: snapshot.data.documents[i]['dob'],
+                                email: snapshot.data.documents[i]['email'],
+                                flag: snapshot.data.documents[i]['flag'],
+                                gender: snapshot.data.documents[i]['gender'],
+                                imageUrl: snapshot.data
+                                    .documents[i]['profile_picture'],
+                                likes: snapshot.data.documents[i]['likes'],
+                                name: snapshot.data.documents[i]['name'],
+                                phoneNumber: snapshot.data
+                                    .documents[i]['phoneNumber'],
+                                pinned: snapshot.data.documents[i]['pinned'],
+                                subscribers: snapshot.data
+                                    .documents[i]['subscribers'],
+                                favourites: snapshot.data
+                                    .documents[i]['favourites'],
+                                userId: snapshot.data.documents[i]['userId'],
+                                website: snapshot.data.documents[i]['website'],
+                                isFavourited: false
+                            );
+
+                            if (currentUser != null) {
+                              user.isFavourited = snapshot.data
+                                  .documents[i]['favourites'].contains(
+                                  currentUser.userId);
+                            }
 
                           users.add(user);
                         }
